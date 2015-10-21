@@ -1,0 +1,10 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'me.mgerdes.raytracer.RayTracer'
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'me.mgerdes.raytracer.RayTracer'
+    }
+}
