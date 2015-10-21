@@ -9,6 +9,12 @@ public class Vector {
         this.z = z;
     }
 
+    public Vector(Normal n) {
+        this.x = n.x;
+        this.y = n.y;
+        this.z = n.z;
+    }
+
     public Vector plus(Vector v) {
         return new Vector(x + v.x, y + v.y, z + v.z);
     }

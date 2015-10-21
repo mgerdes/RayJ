@@ -1,8 +1,10 @@
 package me.mgerdes.raytracer.World;
 
-import me.mgerdes.raytracer.GeometricObjects.GeometricObject;
 import me.mgerdes.raytracer.Color.RGBColor;
+import me.mgerdes.raytracer.GeometricObjects.GeometricObject;
+import me.mgerdes.raytracer.GeometricObjects.Plane;
 import me.mgerdes.raytracer.GeometricObjects.Sphere;
+import me.mgerdes.raytracer.Maths.Normal;
 import me.mgerdes.raytracer.Maths.Point;
 import me.mgerdes.raytracer.Maths.Ray;
 import me.mgerdes.raytracer.Maths.Vector;
@@ -23,10 +25,12 @@ public class World {
     }
 
     public void buildScene() {
-        GeometricObject s = new Sphere(new Point(0,0,0), 100, new RGBColor(100,100,100));
-        GeometricObject s2 = new Sphere(new Point(0,10,0), 100, new RGBColor(100,0,100));
+        GeometricObject s = new Sphere(new Point(0,-25,0), 80, new RGBColor(100,100,100));
+        GeometricObject s2 = new Sphere(new Point(0,30,0), 60, new RGBColor(100,0,100));
+        GeometricObject p = new Plane(new Point(0,0,0), new Normal(0,1,1), new RGBColor(10,0,100));
         objects.add(s);
         objects.add(s2);
+        objects.add(p);
     }
 
     public void renderScene() throws FileNotFoundException, UnsupportedEncodingException {
@@ -38,10 +42,10 @@ public class World {
         writer.printf("400 400\n");
         writer.printf("255\n");
 
-        for (int i = 0; i < 400; i++) {
-            for (int j = 0; j < 400; j++) {
-                double x = (i - 0.5 * (400 - 1.0));
-                double y = (j - 0.5 * (400 - 1.0));
+        for (int row = 0; row < 400; row++) {
+            for (int col = 0; col < 400; col++) {
+                double x = (col - 0.5 * (400 - 1.0));
+                double y = (row - 0.5 * (400 - 1.0));
 
                 Ray r = new Ray(rayDirection, new Point(x, y, z));
                 RGBColor color = getRaysHitColor(r);

@@ -55,8 +55,4 @@ public class Sphere implements GeometricObject {
 
         return new HitInfo(false);
     }
-
-    public RGBColor getColor() {
-        return color;
-    }
 }
