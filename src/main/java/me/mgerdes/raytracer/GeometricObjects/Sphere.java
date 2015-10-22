@@ -1,6 +1,7 @@
 package me.mgerdes.raytracer.GeometricObjects;
 
 import me.mgerdes.raytracer.Color.RGBColor;
+import me.mgerdes.raytracer.Material.Material;
 import me.mgerdes.raytracer.Maths.Normal;
 import me.mgerdes.raytracer.Maths.Point;
 import me.mgerdes.raytracer.Maths.Ray;
@@ -10,12 +11,12 @@ import me.mgerdes.raytracer.Utilities.HitInfo;
 public class Sphere implements GeometricObject {
     private Point center;
     private double radius;
-    private RGBColor color;
+    private Material material;
 
-    public Sphere(Point center, double radius, RGBColor color) {
+    public Sphere(Point center, double radius, Material material) {
         this.center = center;
         this.radius = radius;
-        this.color = color;
+        this.material = material;
     }
 
     public HitInfo hit(Ray ray) {
@@ -36,8 +37,11 @@ public class Sphere implements GeometricObject {
                 Vector v = temp.plus(ray.direction.times(t)).divide(radius);
                 HitInfo h = new HitInfo(true);
                 h.setNormal(new Normal(v));
-                h.setColor(color);
+                h.setMaterial(material);
                 h.setTime(t);
+
+                Point hitPoint = ray.origin.plus(ray.direction.times(t));
+                h.setHitPoint(hitPoint);
                 return h;
             }
 
@@ -47,8 +51,11 @@ public class Sphere implements GeometricObject {
                 Vector v = temp.plus(ray.direction.times(t)).divide(radius);
                 HitInfo h = new HitInfo(true);
                 h.setNormal(new Normal(v));
-                h.setColor(color);
+                h.setMaterial(material);
                 h.setTime(t);
+
+                Point hitPoint = ray.origin.plus(ray.direction.times(t));
+                h.setHitPoint(hitPoint);
                 return h;
             }
         }

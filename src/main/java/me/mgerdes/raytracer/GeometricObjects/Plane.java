@@ -1,6 +1,6 @@
 package me.mgerdes.raytracer.GeometricObjects;
 
-import me.mgerdes.raytracer.Color.RGBColor;
+import me.mgerdes.raytracer.Material.Material;
 import me.mgerdes.raytracer.Maths.Normal;
 import me.mgerdes.raytracer.Maths.Point;
 import me.mgerdes.raytracer.Maths.Ray;
@@ -10,12 +10,12 @@ import me.mgerdes.raytracer.Utilities.HitInfo;
 public class Plane implements GeometricObject {
     private Point point;
     private Normal normal;
-    private RGBColor color;
+    private Material material;
 
-    public Plane(Point point, Normal normal, RGBColor color) {
+    public Plane(Point point, Normal normal, Material material) {
         this.point = point;
         this.normal = normal;
-        this.color = color;
+        this.material = material;
     }
 
     public HitInfo hit(Ray ray) {
@@ -26,7 +26,10 @@ public class Plane implements GeometricObject {
             HitInfo hitInfo = new HitInfo(true);
             hitInfo.setTime(t);
             hitInfo.setNormal(normal);
-            hitInfo.setColor(color);
+            hitInfo.setMaterial(material);
+
+            Point hitPoint = ray.origin.plus(ray.direction.times(t));
+            hitInfo.setHitPoint(hitPoint);
             return hitInfo;
         }
 

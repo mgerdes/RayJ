@@ -15,6 +15,12 @@ public class Vector {
         this.z = n.z;
     }
 
+    public Vector(Point p) {
+        this.x = p.x;
+        this.y = p.y;
+        this.z = p.z;
+    }
+
     public Vector plus(Vector v) {
         return new Vector(x + v.x, y + v.y, z + v.z);
     }

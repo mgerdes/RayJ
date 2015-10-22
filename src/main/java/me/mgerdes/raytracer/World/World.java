@@ -4,6 +4,11 @@ import me.mgerdes.raytracer.Color.RGBColor;
 import me.mgerdes.raytracer.GeometricObjects.GeometricObject;
 import me.mgerdes.raytracer.GeometricObjects.Plane;
 import me.mgerdes.raytracer.GeometricObjects.Sphere;
+import me.mgerdes.raytracer.Light.Ambient;
+import me.mgerdes.raytracer.Light.Light;
+import me.mgerdes.raytracer.Light.PointLight;
+import me.mgerdes.raytracer.Material.Material;
+import me.mgerdes.raytracer.Material.Matte;
 import me.mgerdes.raytracer.Maths.Normal;
 import me.mgerdes.raytracer.Maths.Point;
 import me.mgerdes.raytracer.Maths.Ray;
@@ -14,23 +19,43 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class World {
-    private ArrayList<GeometricObject> objects;
+    private List<GeometricObject> objects;
+    private List<Light> lights;
     private RGBColor backgroundColor;
 
     public World() {
         objects = new ArrayList<>();
+        lights = new ArrayList<>();
         backgroundColor = new RGBColor(0, 0, 0);
     }
 
+    public List<GeometricObject> getObjects() {
+        return objects;
+    }
+
+    public List<Light> getLights() {
+        return lights;
+    }
+
     public void buildScene() {
-        GeometricObject s = new Sphere(new Point(0,-25,0), 80, new RGBColor(100,100,100));
-        GeometricObject s2 = new Sphere(new Point(0,30,0), 60, new RGBColor(100,0,100));
-        GeometricObject p = new Plane(new Point(0,0,0), new Normal(0,1,1), new RGBColor(10,0,100));
+        Material sM = new Matte(new RGBColor(100, 55, 200), 0.8);
+        Material s2M = new Matte(new RGBColor(0, 80, 100), 0.8);
+        Material pM = new Matte(new RGBColor(0, 200, 0), 0.8);
+
+        GeometricObject s = new Sphere(new Point(0,-25,0), 80, sM);
+        GeometricObject s2 = new Sphere(new Point(0,30,0), 60, s2M);
+        GeometricObject p = new Plane(new Point(0,0,0), new Normal(0,1,1), pM);
         objects.add(s);
         objects.add(s2);
         objects.add(p);
+
+        Ambient l = new Ambient(new RGBColor(0.2, 0.2, 0.2), 0.8);
+        PointLight pointLight = new PointLight(new RGBColor(0.8, 0.8, 0.8), new Point(10, 10, 10), 0.8);
+        lights.add(l);
+        lights.add(pointLight);
     }
 
     public void renderScene() throws FileNotFoundException, UnsupportedEncodingException {
@@ -60,7 +85,7 @@ public class World {
         HitInfo h = traceRay(r);
 
         if (h.isHit()) {
-            return h.getColor();
+            return h.getMaterial().shade(h);
         } else {
             return backgroundColor;
         }
@@ -73,6 +98,7 @@ public class World {
         for (GeometricObject g : objects) {
             HitInfo h = g.hit(r);
             if (h.isHit() && h.getTime() < minHit.getTime()) {
+                h.setWorld(this);
                 minHit =  h;
             }
         }

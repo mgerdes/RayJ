@@ -1,10 +1,14 @@
 package me.mgerdes.raytracer.Utilities;
 
-import me.mgerdes.raytracer.Color.RGBColor;
+import me.mgerdes.raytracer.Material.Material;
 import me.mgerdes.raytracer.Maths.Normal;
+import me.mgerdes.raytracer.Maths.Point;
+import me.mgerdes.raytracer.World.World;
 
 public class HitInfo {
-    private RGBColor color;
+    private Point hitPoint;
+    private World world;
+    private Material material;
     private Normal normal;
     private double time;
     private boolean isHit;
@@ -17,6 +21,22 @@ public class HitInfo {
         return isHit;
     }
 
+    public void setHitPoint(Point h) {
+        this.hitPoint = h;
+    }
+
+    public Point getHitPoint() {
+        return hitPoint;
+    }
+
+    public void setWorld(World world) {
+        this.world = world;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
     public void setTime(double time) {
         this.time = time;
     }
@@ -25,16 +45,16 @@ public class HitInfo {
         return time;
     }
 
-    public void setColor(RGBColor color) {
-        this.color = color;
+    public void setMaterial(Material material) {
+        this.material = material;
     }
 
     public void setNormal(Normal normal) {
         this.normal = normal;
     }
 
-    public RGBColor getColor() {
-        return color;
+    public Material getMaterial() {
+        return material;
     }
 
     public Normal getNormal() {
