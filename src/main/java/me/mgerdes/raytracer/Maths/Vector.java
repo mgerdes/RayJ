@@ -36,4 +36,8 @@ public class Vector {
     public Vector divide(double s) {
         return new Vector(x / s , y / s, z / s);
     }
+
+    public Vector hat() {
+        return this.divide(Math.sqrt(x*x + y*y + z*z));
+    }
 }

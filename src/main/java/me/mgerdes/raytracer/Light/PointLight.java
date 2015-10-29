@@ -18,7 +18,7 @@ public class PointLight implements Light {
 
     public RGBColor L(HitInfo h) {
         Vector normal = new Vector(h.getNormal());
-        double dot = location.minus(h.getHitPoint()).dot(normal);
+        double dot = Math.max(location.minus(h.getHitPoint()).hat().dot(normal.hat()), 0);
         return color.scale(ls * dot);
     }
 }

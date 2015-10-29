@@ -53,7 +53,7 @@ public class World {
         objects.add(p);
 
         Ambient l = new Ambient(new RGBColor(0.2, 0.2, 0.2), 0.8);
-        PointLight pointLight = new PointLight(new RGBColor(0.8, 0.8, 0.8), new Point(10, 10, 10), 0.8);
+        PointLight pointLight = new PointLight(new RGBColor(0.8, 0.8, 0.8), new Point(100, 100, 100), 0.8);
         lights.add(l);
         lights.add(pointLight);
     }

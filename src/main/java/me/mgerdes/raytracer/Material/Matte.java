@@ -20,6 +20,10 @@ public class Matte implements Material {
             color = color.plus(light.L(h).times(cd));
         }
 
+        if (color.r > 255 || color.g > 255 || color.b > 255) {
+            color = new RGBColor(0,0,0);
+        }
+
         return color;
     }
 }
