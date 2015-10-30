@@ -41,41 +41,57 @@ public class World {
     }
 
     public void buildScene() {
-        Material sM = new Matte(new RGBColor(100, 55, 200), 0.8);
-        Material s2M = new Matte(new RGBColor(0, 80, 100), 0.8);
-        Material pM = new Matte(new RGBColor(0, 200, 0), 0.8);
+        for (int i = 1; i <= 4; i++) {
+            for (int j = 1; j <= i * i; j++) {
+                int x, y, z;
 
-        GeometricObject s = new Sphere(new Point(0,-25,0), 80, sM);
-        GeometricObject s2 = new Sphere(new Point(0,30,0), 60, s2M);
-        GeometricObject p = new Plane(new Point(0,0,0), new Normal(0,1,1), pM);
-        objects.add(s);
-        objects.add(s2);
-        objects.add(p);
+                if (i == 1 && j == 1) {
+                    x = 0;
+                    y = 0;
+                    z = -160;
+                } else {
+                    x = (int) (80 * i * Math.cos(2 * Math.PI * (j / ((double) i * i)))) + (int) (10*Math.random());
+                    y = (int) (80 * i * Math.sin(2 * Math.PI * (j / ((double) i * i)))) + (int) (10*Math.random());
+                    z = - i * 160 - (int) (80*Math.random());
+                }
 
-        Ambient l = new Ambient(new RGBColor(0.2, 0.2, 0.2), 0.8);
-        PointLight pointLight = new PointLight(new RGBColor(0.8, 0.8, 0.8), new Point(100, 100, 100), 0.8);
-        lights.add(l);
+                int r = (int)(256*Math.random());
+                int g = (int)(256*Math.random());
+                int b = (int)(256*Math.random());
+
+                Material m = new Matte(new RGBColor(r,g,b), 0.8);
+
+                objects.add(new Sphere(new Point(x, y, z), (160 / Math.sqrt(i)) + (int) (10*Math.random()), m));
+            }
+        }
+
+        Ambient ambientLight = new Ambient(new RGBColor(0.3, 0.3, 0.3), 0.8);
+        PointLight pointLight = new PointLight(new RGBColor(0.8, 0.8, 0.8), new Point(200, 400, 700), 0.8);
+        lights.add(ambientLight);
         lights.add(pointLight);
     }
 
     public void renderScene() throws FileNotFoundException, UnsupportedEncodingException {
         double z = 100.0;
-        Vector rayDirection = new Vector(0,0,-1);
+        Vector rayDirection = new Vector(0, 0, -1);
+
+        int width = 1500;
+        int height = 1500;
 
         PrintWriter writer = new PrintWriter("image.ppm", "UTF-8");
         writer.printf("P3\n");
-        writer.printf("400 400\n");
+        writer.printf("%d %d\n", width, height);
         writer.printf("255\n");
 
-        for (int row = 0; row < 400; row++) {
-            for (int col = 0; col < 400; col++) {
-                double x = (col - 0.5 * (400 - 1.0));
-                double y = (row - 0.5 * (400 - 1.0));
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                double x = (col - 0.5 * (width - 1.0));
+                double y = (row - 0.5 * (height - 1.0));
 
                 Ray r = new Ray(rayDirection, new Point(x, y, z));
                 RGBColor color = getRaysHitColor(r);
 
-                writer.printf("%d %d %d ", (int)color.r, (int)color.g, (int)color.b);
+                writer.printf("%d %d %d ", (int) color.r, (int) color.g, (int) color.b);
             }
             writer.printf("\n");
         }
@@ -99,7 +115,7 @@ public class World {
             HitInfo h = g.hit(r);
             if (h.isHit() && h.getTime() < minHit.getTime()) {
                 h.setWorld(this);
-                minHit =  h;
+                minHit = h;
             }
         }
 
