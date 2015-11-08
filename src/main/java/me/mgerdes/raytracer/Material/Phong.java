@@ -10,13 +10,14 @@ import java.util.List;
 public class Phong implements Material {
 
     private final RGBColor color;
-    private final double ka, kd, ks;
+    private final double ka, kd, ks, e;
 
-    public Phong(RGBColor color, double ka, double kd, double ks) {
+    public Phong(RGBColor color, double ka, double kd, double ks, double e) {
         this.color = color;
         this.ka = ka;
         this.kd = kd;
         this.ks = ks;
+        this.e = e;
     }
 
     public RGBColor shade(HitInfo h) {
@@ -57,7 +58,7 @@ public class Phong implements Material {
             Vector w = h.getRay().direction.times(-1).hat();
             double r_dot_w = Math.max(r.dot(w), 0);
 
-            RGBColor c = color.scale(Math.pow(r_dot_w, 5) * l_dot_n * ks);
+            RGBColor c = color.scale(Math.pow(r_dot_w, e) * l_dot_n * ks);
             shade = shade.plus(c);
         }
         return shade;

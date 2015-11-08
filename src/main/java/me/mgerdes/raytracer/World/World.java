@@ -59,7 +59,7 @@ public class World {
                 int g = (int)(256*Math.random());
                 int b = (int)(256*Math.random());
 
-                Material m = new Phong(new RGBColor(r,g,b), 0.2, 0.5, 0.3);
+                Material m = new Phong(new RGBColor(r,g,b), 0.2, 0.5, 0.3, 5);
 
                 objects.add(new Sphere(new Point(x, y, z), (160 / Math.sqrt(i)) + (int) (10*Math.random()), m));
             }
