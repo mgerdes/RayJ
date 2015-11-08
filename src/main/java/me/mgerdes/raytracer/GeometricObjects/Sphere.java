@@ -1,6 +1,5 @@
 package me.mgerdes.raytracer.GeometricObjects;
 
-import me.mgerdes.raytracer.Color.RGBColor;
 import me.mgerdes.raytracer.Material.Material;
 import me.mgerdes.raytracer.Maths.Normal;
 import me.mgerdes.raytracer.Maths.Point;
@@ -39,6 +38,7 @@ public class Sphere implements GeometricObject {
                 h.setNormal(new Normal(v));
                 h.setMaterial(material);
                 h.setTime(t);
+                h.setRay(ray);
 
                 Point hitPoint = ray.origin.plus(ray.direction.times(t));
                 h.setHitPoint(hitPoint);
@@ -53,6 +53,7 @@ public class Sphere implements GeometricObject {
                 h.setNormal(new Normal(v));
                 h.setMaterial(material);
                 h.setTime(t);
+                h.setRay(ray);
 
                 Point hitPoint = ray.origin.plus(ray.direction.times(t));
                 h.setHitPoint(hitPoint);

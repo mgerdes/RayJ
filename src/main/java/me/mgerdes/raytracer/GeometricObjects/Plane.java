@@ -27,6 +27,7 @@ public class Plane implements GeometricObject {
             hitInfo.setTime(t);
             hitInfo.setNormal(normal);
             hitInfo.setMaterial(material);
+            hitInfo.setRay(ray);
 
             Point hitPoint = ray.origin.plus(ray.direction.times(t));
             hitInfo.setHitPoint(hitPoint);

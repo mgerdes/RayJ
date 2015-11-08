@@ -3,9 +3,11 @@ package me.mgerdes.raytracer.Utilities;
 import me.mgerdes.raytracer.Material.Material;
 import me.mgerdes.raytracer.Maths.Normal;
 import me.mgerdes.raytracer.Maths.Point;
+import me.mgerdes.raytracer.Maths.Ray;
 import me.mgerdes.raytracer.World.World;
 
 public class HitInfo {
+    private Ray ray;
     private Point hitPoint;
     private World world;
     private Material material;
@@ -15,6 +17,14 @@ public class HitInfo {
 
     public HitInfo(boolean isHit) {
         this.isHit = isHit;
+    }
+
+    public Ray getRay() {
+        return ray;
+    }
+
+    public void setRay(Ray ray) {
+        this.ray = ray;
     }
 
     public boolean isHit() {

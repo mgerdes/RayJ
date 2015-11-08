@@ -4,11 +4,11 @@ import me.mgerdes.raytracer.Color.RGBColor;
 import me.mgerdes.raytracer.GeometricObjects.GeometricObject;
 import me.mgerdes.raytracer.GeometricObjects.Plane;
 import me.mgerdes.raytracer.GeometricObjects.Sphere;
-import me.mgerdes.raytracer.Light.Ambient;
 import me.mgerdes.raytracer.Light.Light;
 import me.mgerdes.raytracer.Light.PointLight;
 import me.mgerdes.raytracer.Material.Material;
 import me.mgerdes.raytracer.Material.Matte;
+import me.mgerdes.raytracer.Material.Phong;
 import me.mgerdes.raytracer.Maths.Normal;
 import me.mgerdes.raytracer.Maths.Point;
 import me.mgerdes.raytracer.Maths.Ray;
@@ -59,15 +59,16 @@ public class World {
                 int g = (int)(256*Math.random());
                 int b = (int)(256*Math.random());
 
-                Material m = new Matte(new RGBColor(r,g,b), 0.8);
+                Material m = new Phong(new RGBColor(r,g,b), 0.2, 0.5, 0.3);
 
                 objects.add(new Sphere(new Point(x, y, z), (160 / Math.sqrt(i)) + (int) (10*Math.random()), m));
             }
         }
 
-        Ambient ambientLight = new Ambient(new RGBColor(0.3, 0.3, 0.3), 0.8);
-        PointLight pointLight = new PointLight(new RGBColor(0.8, 0.8, 0.8), new Point(200, 400, 700), 0.8);
-        lights.add(ambientLight);
+        Plane p = new Plane(new Point(0,-1600,0), new Normal(0,1,0.1), new Matte(new RGBColor(100,100,100), 0.2, 0.8));
+        objects.add(p);
+
+        PointLight pointLight = new PointLight(new Point(200, 400, 700));
         lights.add(pointLight);
     }
 
