@@ -16,7 +16,11 @@ Running `./gradlew run` from the command line will create the image file `image.
 
 # Examples
 
+Without Specular Term
 ![](http://oi68.tinypic.com/6ny14j.jpg)
+
+With Specular Term
+![](http://i.imgur.com/fetKoeJ.png)
 
 # License
 [Unlicense](http://unlicense.org/)
