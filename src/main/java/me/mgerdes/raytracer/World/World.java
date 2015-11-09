@@ -7,7 +7,6 @@ import me.mgerdes.raytracer.GeometricObjects.Sphere;
 import me.mgerdes.raytracer.Light.Light;
 import me.mgerdes.raytracer.Light.PointLight;
 import me.mgerdes.raytracer.Material.Material;
-import me.mgerdes.raytracer.Material.Matte;
 import me.mgerdes.raytracer.Material.Phong;
 import me.mgerdes.raytracer.Maths.Normal;
 import me.mgerdes.raytracer.Maths.Point;
@@ -68,7 +67,7 @@ public class World {
         Plane p = new Plane(new Point(0,0,-1000), new Normal(0,0,1), new Phong(new RGBColor(30,30,30), 0.12, 0.6, 0.28, 5));
         objects.add(p);
 
-        PointLight pointLight = new PointLight(new Point(200, 400, 700));
+        PointLight pointLight = new PointLight(new Point(800, 400, 700));
         lights.add(pointLight);
     }
 
