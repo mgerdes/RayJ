@@ -22,5 +22,8 @@ Without Specular Term
 With Specular Term
 ![](http://i.imgur.com/fetKoeJ.png)
 
+With Shadows
+![](http://i.imgur.com/JE7EunT.png)
+
 # License
 [Unlicense](http://unlicense.org/)

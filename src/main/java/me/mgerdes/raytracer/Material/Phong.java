@@ -36,12 +36,14 @@ public class Phong implements Material {
         RGBColor shade = new RGBColor(0,0,0);
         List<Light> lights = h.getWorld().getLights();
         for (Light light : lights) {
-            Vector l = light.getLocation().minus(h.getHitPoint()).hat();
-            Vector n = new Vector(h.getNormal()).hat();
-            double l_dot_n = Math.max(l.dot(n), 0);
+            if (!light.isInShadow(h)) {
+                Vector l = light.getLocation().minus(h.getHitPoint()).hat();
+                Vector n = new Vector(h.getNormal()).hat();
+                double l_dot_n = Math.max(l.dot(n), 0);
 
-            RGBColor c = color.scale(l_dot_n * kd);
-            shade = shade.plus(c);
+                RGBColor c = color.scale(l_dot_n * kd);
+                shade = shade.plus(c);
+            }
         }
         return shade;
     }
@@ -50,16 +52,18 @@ public class Phong implements Material {
         RGBColor shade = new RGBColor(0,0,0);
         List<Light> lights = h.getWorld().getLights();
         for (Light light : lights) {
-            Vector l = light.getLocation().minus(h.getHitPoint()).hat();
-            Vector n = new Vector(h.getNormal()).hat();
-            double l_dot_n = Math.max(l.dot(n), 0);
+            if (!light.isInShadow(h)) {
+                Vector l = light.getLocation().minus(h.getHitPoint()).hat();
+                Vector n = new Vector(h.getNormal()).hat();
+                double l_dot_n = Math.max(l.dot(n), 0);
 
-            Vector r = l.times(-1).plus(n.times(2 * l_dot_n)).hat();
-            Vector w = h.getRay().direction.times(-1).hat();
-            double r_dot_w = Math.max(r.dot(w), 0);
+                Vector r = l.times(-1).plus(n.times(2 * l_dot_n)).hat();
+                Vector w = h.getRay().direction.times(-1).hat();
+                double r_dot_w = Math.max(r.dot(w), 0);
 
-            RGBColor c = color.scale(Math.pow(r_dot_w, e) * l_dot_n * ks);
-            shade = shade.plus(c);
+                RGBColor c = color.scale(Math.pow(r_dot_w, e) * l_dot_n * ks);
+                shade = shade.plus(c);
+            }
         }
         return shade;
     }

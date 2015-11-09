@@ -16,4 +16,8 @@ public class Point {
     public Vector minus(Point p) {
         return new Vector(x - p.x, y - p.y, z - p.z);
     }
+
+    public double distanceTo(Point p) {
+        return Math.sqrt((this.x - p.x) * (this.x - p.x) + (this.y - p.y) * (this.y - p.y) + (this.z - p.z) * (this.z - p.z));
+    }
 }

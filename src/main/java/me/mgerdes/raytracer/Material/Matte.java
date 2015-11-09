@@ -33,11 +33,13 @@ public class Matte implements Material {
         RGBColor shade = new RGBColor(0,0,0);
         List<Light> lights = h.getWorld().getLights();
         for (Light light : lights) {
-            Vector l = light.getLocation().minus(h.getHitPoint()).hat();
-            Vector n = new Vector(h.getNormal()).hat();
-            double dot = Math.max(l.dot(n), 0);
-            RGBColor c = color.scale(dot * kd);
-            shade = shade.plus(c);
+            if (!light.isInShadow(h)) {
+                Vector l = light.getLocation().minus(h.getHitPoint()).hat();
+                Vector n = new Vector(h.getNormal()).hat();
+                double dot = Math.max(l.dot(n), 0);
+                RGBColor c = color.scale(dot * kd);
+                shade = shade.plus(c);
+            }
         }
         return shade;
     }

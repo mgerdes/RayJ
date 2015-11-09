@@ -59,13 +59,13 @@ public class World {
                 int g = (int)(256*Math.random());
                 int b = (int)(256*Math.random());
 
-                Material m = new Phong(new RGBColor(r,g,b), 0.2, 0.5, 0.3, 5);
+                Material m = new Phong(new RGBColor(r,g,b), 0.12, 0.6, 0.28, 5);
 
                 objects.add(new Sphere(new Point(x, y, z), (160 / Math.sqrt(i)) + (int) (10*Math.random()), m));
             }
         }
 
-        Plane p = new Plane(new Point(0,-1600,0), new Normal(0,1,0.1), new Matte(new RGBColor(100,100,100), 0.2, 0.8));
+        Plane p = new Plane(new Point(0,0,-1000), new Normal(0,0,1), new Phong(new RGBColor(30,30,30), 0.12, 0.6, 0.28, 5));
         objects.add(p);
 
         PointLight pointLight = new PointLight(new Point(200, 400, 700));
