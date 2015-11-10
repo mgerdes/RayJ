@@ -25,5 +25,8 @@ With Specular Term
 With Shadows
 ![](http://i.imgur.com/JE7EunT.png)
 
+With Ambient Occlusion 
+![](http://i.imgur.com/P3Yg3yB.png)
+
 # License
 [Unlicense](http://unlicense.org/)
