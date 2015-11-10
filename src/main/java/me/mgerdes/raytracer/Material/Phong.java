@@ -1,14 +1,22 @@
 package me.mgerdes.raytracer.Material;
 
 import me.mgerdes.raytracer.Color.RGBColor;
+import me.mgerdes.raytracer.GeometricObjects.GeometricObject;
 import me.mgerdes.raytracer.Light.Light;
+import me.mgerdes.raytracer.Maths.Point;
+import me.mgerdes.raytracer.Maths.Ray;
 import me.mgerdes.raytracer.Maths.Vector;
+import me.mgerdes.raytracer.Samplers.HemisphereSampler;
+import me.mgerdes.raytracer.Samplers.Sampler;
 import me.mgerdes.raytracer.Utilities.HitInfo;
 
 import java.util.List;
 
 public class Phong implements Material {
 
+    private final static int NUMBER_OF_SAMPLES = 256;
+
+    private final Sampler sampler;
     private final RGBColor color;
     private final double ka, kd, ks, e;
 
@@ -18,18 +26,31 @@ public class Phong implements Material {
         this.kd = kd;
         this.ks = ks;
         this.e = e;
+        this.sampler = new HemisphereSampler(NUMBER_OF_SAMPLES);
     }
 
     public RGBColor shade(HitInfo h) {
-        RGBColor c = ambientTerm().plus(diffuseTerm(h)).plus(specularTerm(h));
+        RGBColor c = ambientTerm(h).plus(diffuseTerm(h)).plus(specularTerm(h));
         if (c.r > 255 || c.g > 255 || c.b > 255) {
             System.out.println("Gamut Overflow");
         }
         return c;
     }
 
-    private RGBColor ambientTerm() {
-        return color.scale(ka);
+    private RGBColor ambientTerm(HitInfo h) {
+        Point[] samplePoints = sampler.getSamplePoints();
+        int hits = 0;
+        for (Point p : samplePoints) {
+            Ray ray = new Ray(p.minus(h.getHitPoint()), h.getHitPoint());
+            for (GeometricObject object : h.getWorld().getObjects()) {
+                HitInfo hit = object.hit(ray);
+                if (hit.isHit()) {
+                    hits++;
+                    break;
+                }
+            }
+        }
+        return color.scale((NUMBER_OF_SAMPLES - hits) / NUMBER_OF_SAMPLES);
     }
 
     private RGBColor diffuseTerm(HitInfo h) {
