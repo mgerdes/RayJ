@@ -40,4 +40,10 @@ public class Vector {
     public Vector hat() {
         return this.divide(Math.sqrt(x*x + y*y + z*z));
     }
+
+    public Vector cross(Vector v) {
+        return new Vector(this.y * v.z - this.z * v.y,
+                this.z * v.x - this.x * v.z,
+                this.x * v.y - this.y * v.x);
+    }
 }

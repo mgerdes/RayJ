@@ -19,9 +19,9 @@ public class HemisphereSampler implements Sampler {
 
         int num = 0;
         for (int i = 0; i < sqrt; i++) {
-            double theta = (i / sqrt) * 2 * Math.PI;
+            double theta = ((double) i / sqrt) * 2 * Math.PI;
             for (int j = 0; j < sqrt; j++) {
-                double phi = (j / sqrt) * Math.PI / 2;
+                double phi = ((double) j / sqrt) * Math.PI / 2;
 
                 double sin_theta = Math.sin(theta);
                 double cos_theta = Math.cos(theta);

@@ -38,10 +38,15 @@ public class Phong implements Material {
     }
 
     private RGBColor ambientTerm(HitInfo h) {
-        Point[] samplePoints = sampler.getSamplePoints();
+        Vector w = new Vector(h.getNormal()).hat();
+        Vector v = w.cross(new Vector(0.0072,1,0.0034)).hat();
+        Vector u = v.cross(w).hat();
+
         int hits = 0;
-        for (Point p : samplePoints) {
-            Ray ray = new Ray(p.minus(h.getHitPoint()), h.getHitPoint());
+        for (Point p : sampler.getSamplePoints()) {
+            Vector direction = u.times(p.x).plus(v.times(p.y)).plus(w.times(p.z));
+            Ray ray = new Ray(direction, h.getHitPoint());
+
             for (GeometricObject object : h.getWorld().getObjects()) {
                 HitInfo hit = object.hit(ray);
                 if (hit.isHit()) {
@@ -50,7 +55,7 @@ public class Phong implements Material {
                 }
             }
         }
-        return color.scale((NUMBER_OF_SAMPLES - hits) / NUMBER_OF_SAMPLES);
+        return color.scale(ka * (1 - (((double) hits) / NUMBER_OF_SAMPLES)));
     }
 
     private RGBColor diffuseTerm(HitInfo h) {
