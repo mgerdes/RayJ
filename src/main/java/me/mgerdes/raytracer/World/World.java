@@ -4,14 +4,17 @@ import me.mgerdes.raytracer.Color.RGBColor;
 import me.mgerdes.raytracer.GeometricObjects.GeometricObject;
 import me.mgerdes.raytracer.GeometricObjects.Plane;
 import me.mgerdes.raytracer.GeometricObjects.Sphere;
+import me.mgerdes.raytracer.GeometricObjects.Triangle;
 import me.mgerdes.raytracer.Light.Light;
 import me.mgerdes.raytracer.Light.PointLight;
 import me.mgerdes.raytracer.Material.Material;
+import me.mgerdes.raytracer.Material.Matte;
 import me.mgerdes.raytracer.Material.Phong;
 import me.mgerdes.raytracer.Maths.Normal;
 import me.mgerdes.raytracer.Maths.Point;
 import me.mgerdes.raytracer.Maths.Ray;
 import me.mgerdes.raytracer.Maths.Vector;
+import me.mgerdes.raytracer.MeshReaders.WavefrontOBJReader;
 import me.mgerdes.raytracer.Utilities.HitInfo;
 
 import java.io.FileNotFoundException;
@@ -59,13 +62,20 @@ public class World {
                 int b = (int)(256*Math.random());
 
                 Material m = new Phong(new RGBColor(r,g,b), 0.35, 0.50, 0.15, 5);
+                m = new Matte(new RGBColor(r,g,b), 0.20, 0.80);
 
-                objects.add(new Sphere(new Point(x, y, z), (160 / Math.sqrt(i)) + (int) (10*Math.random()), m));
+                //objects.add(new Sphere(new Point(x, y, z), (160 / Math.sqrt(i)) + (int) (10*Math.random()), m));
             }
         }
 
+        Triangle t = new Triangle(new Point(300,300, -300), new Point(300,-300,-300), new Point(100, 0, -10), new Matte(new RGBColor(250,100,170), 0.2, 0.8));
+        //objects.add(t);
+
         Plane p = new Plane(new Point(0,0,-1000), new Normal(0,0,1), new Phong(new RGBColor(30,30,30), 0.12, 0.6, 0.28, 5));
-        objects.add(p);
+        //objects.add(p);
+
+        WavefrontOBJReader objReader = new WavefrontOBJReader("bunny.obj");
+        objects.add(objReader.getTriangleMesh());
 
         PointLight pointLight = new PointLight(new Point(800, 400, 700));
         lights.add(pointLight);
@@ -75,16 +85,23 @@ public class World {
         double z = 100.0;
         Vector rayDirection = new Vector(0, 0, -1);
 
-        int width = 1500;
-        int height = 1500;
+        int width = 500;
+        int height = 500;
 
         PrintWriter writer = new PrintWriter("image.ppm", "UTF-8");
         writer.printf("P3\n");
         writer.printf("%d %d\n", width, height);
         writer.printf("255\n");
 
+        double lastPercent = 0;
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
+                double percentDone = (row * col) / ((double) (width * height));
+                if (percentDone > lastPercent) {
+                    System.out.println(percentDone);
+                    lastPercent = percentDone + 0.001;
+                }
+
                 double x = (col - 0.5 * (width - 1.0));
                 double y = (row - 0.5 * (height - 1.0));
 
