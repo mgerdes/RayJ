@@ -19,8 +19,12 @@ public class Plane implements GeometricObject {
     }
 
     public HitInfo hit(Ray ray) {
-        Vector normalVector = new Vector(normal);
-        double t = point.minus(ray.origin).dot(normalVector) / ray.direction.dot(normalVector);
+        Vector normalVector = new Vector(normal).hat();
+
+        Vector v1 = point.minus(ray.origin).hat();
+        Vector v2 = ray.direction.hat();
+
+        double t = v1.dot(normalVector) / v2.dot(normalVector);
 
         if (t > EPSILON) {
             HitInfo hitInfo = new HitInfo(true);

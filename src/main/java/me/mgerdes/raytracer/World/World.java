@@ -4,17 +4,15 @@ import me.mgerdes.raytracer.Color.RGBColor;
 import me.mgerdes.raytracer.GeometricObjects.GeometricObject;
 import me.mgerdes.raytracer.GeometricObjects.Plane;
 import me.mgerdes.raytracer.GeometricObjects.Sphere;
-import me.mgerdes.raytracer.GeometricObjects.Triangle;
 import me.mgerdes.raytracer.Light.Light;
 import me.mgerdes.raytracer.Light.PointLight;
 import me.mgerdes.raytracer.Material.Material;
 import me.mgerdes.raytracer.Material.Matte;
-import me.mgerdes.raytracer.Material.Phong;
+import me.mgerdes.raytracer.Material.Reflective;
 import me.mgerdes.raytracer.Maths.Normal;
 import me.mgerdes.raytracer.Maths.Point;
 import me.mgerdes.raytracer.Maths.Ray;
 import me.mgerdes.raytracer.Maths.Vector;
-import me.mgerdes.raytracer.MeshReaders.WavefrontOBJReader;
 import me.mgerdes.raytracer.Utilities.HitInfo;
 
 import java.io.FileNotFoundException;
@@ -43,39 +41,17 @@ public class World {
     }
 
     public void buildScene() {
-        for (int i = 1; i <= 4; i++) {
-            for (int j = 1; j <= i * i; j++) {
-                int x, y, z;
+        Material m1 = new Matte(new RGBColor(220, 80, 120), 0.20, 0.80);
+        Sphere s1 = new Sphere(new Point(0,100,-100), 50, m1);
+        objects.add(s1);
 
-                if (i == 1 && j == 1) {
-                    x = 0;
-                    y = 0;
-                    z = -160;
-                } else {
-                    x = (int) (80 * i * Math.cos(2 * Math.PI * (j / ((double) i * i)))) + (int) (10*Math.random());
-                    y = (int) (80 * i * Math.sin(2 * Math.PI * (j / ((double) i * i)))) + (int) (10*Math.random());
-                    z = - i * 160 - (int) (80*Math.random());
-                }
+        Material m2 = new Reflective(new RGBColor(80, 220, 120), 0.20, 0.80, 1);
+        Sphere s2 = new Sphere(new Point(120,-120, -100), 100, m2);
+        //objects.add(s2);
 
-                int r = (int)(256*Math.random());
-                int g = (int)(256*Math.random());
-                int b = (int)(256*Math.random());
-
-                Material m = new Phong(new RGBColor(r,g,b), 0.35, 0.50, 0.15, 5);
-                m = new Matte(new RGBColor(r,g,b), 0.20, 0.80);
-
-                //objects.add(new Sphere(new Point(x, y, z), (160 / Math.sqrt(i)) + (int) (10*Math.random()), m));
-            }
-        }
-
-        Triangle t = new Triangle(new Point(300,300, -300), new Point(300,-300,-300), new Point(100, 0, -10), new Matte(new RGBColor(250,100,170), 0.2, 0.8));
-        //objects.add(t);
-
-        Plane p = new Plane(new Point(0,0,-1000), new Normal(0,0,1), new Phong(new RGBColor(30,30,30), 0.12, 0.6, 0.28, 5));
-        //objects.add(p);
-
-        WavefrontOBJReader objReader = new WavefrontOBJReader("bunny.obj");
-        objects.add(objReader.getTriangleMesh());
+        Material m3 = new Matte(new RGBColor(220, 120, 80), 0.2, 0.8);
+        Plane p3 = new Plane(new Point(0,-200,-100), new Normal(0,1,1/1000.0), m3);
+        objects.add(p3);
 
         PointLight pointLight = new PointLight(new Point(800, 400, 700));
         lights.add(pointLight);
@@ -85,8 +61,8 @@ public class World {
         double z = 100.0;
         Vector rayDirection = new Vector(0, 0, -1);
 
-        int width = 500;
-        int height = 500;
+        int width = 1000;
+        int height = 1000;
 
         PrintWriter writer = new PrintWriter("image.ppm", "UTF-8");
         writer.printf("P3\n");
@@ -103,7 +79,7 @@ public class World {
                 }
 
                 double x = (col - 0.5 * (width - 1.0));
-                double y = (row - 0.5 * (height - 1.0));
+                double y = -(row - 0.5 * (height - 1.0));
 
                 Ray r = new Ray(rayDirection, new Point(x, y, z));
                 RGBColor color = getRaysHitColor(r);
@@ -114,7 +90,7 @@ public class World {
         }
     }
 
-    private RGBColor getRaysHitColor(Ray r) {
+    public RGBColor getRaysHitColor(Ray r) {
         HitInfo h = traceRay(r);
 
         if (h.isHit()) {
@@ -124,7 +100,7 @@ public class World {
         }
     }
 
-    private HitInfo traceRay(Ray r) {
+    public HitInfo traceRay(Ray r) {
         HitInfo minHit = new HitInfo(false);
         minHit.setTime(Double.MAX_VALUE);
 
