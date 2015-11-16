@@ -8,7 +8,6 @@ import me.mgerdes.raytracer.Light.Light;
 import me.mgerdes.raytracer.Light.PointLight;
 import me.mgerdes.raytracer.Material.Material;
 import me.mgerdes.raytracer.Material.Matte;
-import me.mgerdes.raytracer.Material.Reflective;
 import me.mgerdes.raytracer.Maths.Normal;
 import me.mgerdes.raytracer.Maths.Point;
 import me.mgerdes.raytracer.Maths.Ray;
@@ -42,24 +41,20 @@ public class World {
 
     public void buildScene() {
         Material m1 = new Matte(new RGBColor(220, 80, 120), 0.20, 0.80);
-        Sphere s1 = new Sphere(new Point(0,100,-100), 50, m1);
+        Sphere s1 = new Sphere(new Point(0,50,-105), 100, m1);
         objects.add(s1);
 
-        Material m2 = new Reflective(new RGBColor(80, 220, 120), 0.20, 0.80, 1);
-        Sphere s2 = new Sphere(new Point(120,-120, -100), 100, m2);
-        //objects.add(s2);
-
         Material m3 = new Matte(new RGBColor(220, 120, 80), 0.2, 0.8);
-        Plane p3 = new Plane(new Point(0,-200,-100), new Normal(0,1,1/1000.0), m3);
+        Plane p3 = new Plane(new Point(0,-25,0), new Normal(0,1,0), m3);
         objects.add(p3);
 
-        PointLight pointLight = new PointLight(new Point(800, 400, 700));
+        PointLight pointLight = new PointLight(new Point(200, 200, 200));
         lights.add(pointLight);
     }
 
     public void renderScene() throws FileNotFoundException, UnsupportedEncodingException {
-        double z = 100.0;
-        Vector rayDirection = new Vector(0, 0, -1);
+        double z = 120.0;
+        double e = 50.0;
 
         int width = 1000;
         int height = 1000;
@@ -81,7 +76,9 @@ public class World {
                 double x = (col - 0.5 * (width - 1.0));
                 double y = -(row - 0.5 * (height - 1.0));
 
-                Ray r = new Ray(rayDirection, new Point(x, y, z));
+                Vector rayDirection = new Vector(x, y, -z).hat();
+
+                Ray r = new Ray(rayDirection, new Point(0, 0, e));
                 RGBColor color = getRaysHitColor(r);
 
                 writer.printf("%d %d %d ", (int) color.r, (int) color.g, (int) color.b);
@@ -92,7 +89,6 @@ public class World {
 
     public RGBColor getRaysHitColor(Ray r) {
         HitInfo h = traceRay(r);
-
         if (h.isHit()) {
             return h.getMaterial().shade(h);
         } else {
