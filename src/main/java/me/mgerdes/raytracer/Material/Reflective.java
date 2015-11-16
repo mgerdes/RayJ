@@ -21,15 +21,15 @@ public class Reflective extends Phong {
 
             Vector normal = new Vector(hitInfo.getNormal()).hat();
 
-            Vector wo = normal.times(-1);
-            double dot = normal.dot(hitInfo.getRay().direction.times(-1).hat());
-            Vector reflectedRayDirection = wo.times(-1).plus(normal.times(2 * dot)).hat();
+            Vector wo = hitInfo.getRay().direction.times(-1).hat();
+            double dot = normal.dot(wo);
+            Vector wi = wo.times(-1).plus(normal.times(2 * dot)).hat();
 
-            Ray reflectedRay = new Ray(reflectedRayDirection, reflectedRayOrigin, hitInfo.getRay().depth + 1);
+            Ray reflectedRay = new Ray(wi, reflectedRayOrigin, hitInfo.getRay().depth + 1);
             HitInfo h = hitInfo.getWorld().traceRay(reflectedRay);
 
             if (h.isHit()) {
-                return h.getMaterial().shade(h).scale(normal.dot(reflectedRayDirection)).scale(0.5).plus(super.shade(hitInfo));
+                return h.getMaterial().shade(h).scale(normal.dot(wi)).plus(super.shade(hitInfo));
             } else {
                 return super.shade(hitInfo);
             }
