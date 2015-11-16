@@ -8,6 +8,7 @@ import me.mgerdes.raytracer.Light.Light;
 import me.mgerdes.raytracer.Light.PointLight;
 import me.mgerdes.raytracer.Material.Material;
 import me.mgerdes.raytracer.Material.Matte;
+import me.mgerdes.raytracer.Material.Reflective;
 import me.mgerdes.raytracer.Maths.Normal;
 import me.mgerdes.raytracer.Maths.Point;
 import me.mgerdes.raytracer.Maths.Ray;
@@ -40,21 +41,35 @@ public class World {
     }
 
     public void buildScene() {
-        Material m1 = new Matte(new RGBColor(220, 80, 120), 0.20, 0.80);
-        Sphere s1 = new Sphere(new Point(0,50,-105), 100, m1);
+        double scale = 300;
+        double length = 1.6329932 * scale;
+        Point[] vertices = {
+                new Point( 0.000 * scale, 0.000 * scale,-1.000 * scale),
+                new Point( 0.943 * scale, 0.000 * scale,-0.333 * scale),
+                new Point(-0.471 * scale, 0.816 * scale,-0.333 * scale),
+                new Point(-0.471 * scale,-0.816 * scale,-0.333 * scale)
+        };
+
+        Material m1 = new Reflective(new RGBColor(Math.random()*250, Math.random()*250, Math.random()*250), 0.20, 0.60, 0.20, 5, 10);
+        Sphere s1 = new Sphere(vertices[0], length / 2, m1);
         objects.add(s1);
+        Material m2 = new Reflective(new RGBColor(Math.random()*250, Math.random()*250, Math.random()*250), 0.20, 0.60, 0.20, 5, 10);
+        Sphere s2 = new Sphere(vertices[1], length / 2, m2);
+        objects.add(s2);
+        Material m3 = new Reflective(new RGBColor(Math.random()*250, Math.random()*250, Math.random()*250), 0.20, 0.60, 0.20, 5, 10);
+        Sphere s3 = new Sphere(vertices[2], length / 2, m3);
+        objects.add(s3);
+        Material m4 = new Reflective(new RGBColor(Math.random()*250, Math.random()*250, Math.random()*250), 0.20, 0.60, 0.20, 5, 10);
+        Sphere s4 = new Sphere(vertices[3], length / 2, m4);
+        objects.add(s4);
 
-        Material m3 = new Matte(new RGBColor(220, 120, 80), 0.2, 0.8);
-        Plane p3 = new Plane(new Point(0,-25,0), new Normal(0,1,0), m3);
-        objects.add(p3);
-
-        PointLight pointLight = new PointLight(new Point(200, 200, 200));
+        PointLight pointLight = new PointLight(new Point(100, 100, 1000));
         lights.add(pointLight);
     }
 
     public void renderScene() throws FileNotFoundException, UnsupportedEncodingException {
-        double z = 120.0;
-        double e = 50.0;
+        double z = 1000.0;
+        Vector rayDirection = new Vector(0, 0, -1);
 
         int width = 1000;
         int height = 1000;
@@ -74,11 +89,9 @@ public class World {
                 }
 
                 double x = (col - 0.5 * (width - 1.0));
-                double y = -(row - 0.5 * (height - 1.0));
+                double y = (row - 0.5 * (height - 1.0));
 
-                Vector rayDirection = new Vector(x, y, -z).hat();
-
-                Ray r = new Ray(rayDirection, new Point(0, 0, e));
+                Ray r = new Ray(rayDirection, new Point(x, y, z));
                 RGBColor color = getRaysHitColor(r);
 
                 writer.printf("%d %d %d ", (int) color.r, (int) color.g, (int) color.b);

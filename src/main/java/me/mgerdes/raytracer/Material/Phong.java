@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Phong implements Material {
 
-    private final static int NUMBER_OF_SAMPLES = 625;
+    private final static int NUMBER_OF_SAMPLES = 256;
 
     private final Sampler sampler;
     private final RGBColor color;
