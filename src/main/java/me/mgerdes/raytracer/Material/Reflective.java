@@ -27,7 +27,7 @@ public class Reflective extends Phong {
         Ray reflectedRay = new Ray(wi, reflectedRayOrigin);
 
         RGBColor L = super.shade(hitInfo);
-        L.plus(hitInfo.getWorld().getTracer().traceRay(reflectedRay, hitInfo.getDepth() + 1));
+        L = L.plus(hitInfo.getWorld().getTracer().traceRay(reflectedRay, hitInfo.getDepth() + 1));
         return L;
     }
 
