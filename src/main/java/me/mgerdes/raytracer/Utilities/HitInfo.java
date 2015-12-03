@@ -14,6 +14,7 @@ public class HitInfo {
     private Normal normal;
     private double time;
     private boolean isHit;
+    private int depth;
 
     public HitInfo(boolean isHit) {
         this.isHit = isHit;
@@ -69,5 +70,13 @@ public class HitInfo {
 
     public Normal getNormal() {
         return normal;
+    }
+
+    public void setDepth(int depth) {
+        this.depth = depth;
+    }
+
+    public int getDepth() {
+        return depth;
     }
 }

@@ -16,26 +16,19 @@ public class Reflective extends Phong {
     }
 
     public RGBColor shade(HitInfo hitInfo) {
-        if (hitInfo.getRay().depth < maxDepth) {
-            Point reflectedRayOrigin = hitInfo.getHitPoint();
+        Point reflectedRayOrigin = hitInfo.getHitPoint();
 
-            Vector normal = new Vector(hitInfo.getNormal()).hat();
+        Vector normal = new Vector(hitInfo.getNormal()).hat();
 
-            Vector wo = hitInfo.getRay().direction.times(-1).hat();
-            double dot = normal.dot(wo);
-            Vector wi = wo.times(-1).plus(normal.times(2 * dot)).hat();
+        Vector wo = hitInfo.getRay().direction.times(-1).hat();
+        double dot = normal.dot(wo);
+        Vector wi = wo.times(-1).plus(normal.times(2 * dot)).hat();
 
-            Ray reflectedRay = new Ray(wi, reflectedRayOrigin, hitInfo.getRay().depth + 1);
-            HitInfo h = hitInfo.getWorld().traceRay(reflectedRay);
+        Ray reflectedRay = new Ray(wi, reflectedRayOrigin);
 
-            if (h.isHit()) {
-                return h.getMaterial().shade(h).scale(normal.dot(wi)).plus(super.shade(hitInfo));
-            } else {
-                return super.shade(hitInfo);
-            }
-        } else {
-            return new RGBColor(0,0,0);
-        }
+        RGBColor L = super.shade(hitInfo);
+        L.plus(hitInfo.getWorld().getTracer().traceRay(reflectedRay, hitInfo.getDepth() + 1));
+        return L;
     }
 
 }

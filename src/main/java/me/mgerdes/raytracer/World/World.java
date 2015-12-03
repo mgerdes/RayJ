@@ -10,6 +10,8 @@ import me.mgerdes.raytracer.Material.Reflective;
 import me.mgerdes.raytracer.Maths.Point;
 import me.mgerdes.raytracer.Maths.Ray;
 import me.mgerdes.raytracer.Maths.Vector;
+import me.mgerdes.raytracer.Tracers.Tracer;
+import me.mgerdes.raytracer.Tracers.WhittedTracer;
 import me.mgerdes.raytracer.Utilities.HitInfo;
 
 import java.io.FileNotFoundException;
@@ -22,11 +24,13 @@ public class World {
     private List<GeometricObject> objects;
     private List<Light> lights;
     private RGBColor backgroundColor;
+    private Tracer tracer;
 
     public World() {
         objects = new ArrayList<>();
         lights = new ArrayList<>();
         backgroundColor = new RGBColor(0, 0, 0);
+        tracer = new WhittedTracer(this, 5);
     }
 
     public List<GeometricObject> getObjects() {
@@ -35,6 +39,14 @@ public class World {
 
     public List<Light> getLights() {
         return lights;
+    }
+
+    public RGBColor getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public Tracer getTracer() {
+        return tracer;
     }
 
     public void buildScene() {
@@ -88,7 +100,7 @@ public class World {
                 double y = (row - 0.5 * (height - 1.0));
 
                 Ray r = new Ray(new Vector(x, y, -z).hat(), new Point(0, 0, z));
-                RGBColor color = getRaysHitColor(r);
+                RGBColor color = tracer.traceRay(r, 0);
 
                 writer.printf("%d %d %d ", (int) color.r, (int) color.g, (int) color.b);
             }
@@ -96,16 +108,8 @@ public class World {
         }
     }
 
-    public RGBColor getRaysHitColor(Ray r) {
-        HitInfo h = traceRay(r);
-        if (h.isHit()) {
-            return h.getMaterial().shade(h);
-        } else {
-            return backgroundColor;
-        }
-    }
 
-    public HitInfo traceRay(Ray r) {
+    public HitInfo hitObjects(Ray r) {
         HitInfo minHit = new HitInfo(false);
         minHit.setTime(Double.MAX_VALUE);
 
