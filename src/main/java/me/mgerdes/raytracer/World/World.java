@@ -24,13 +24,14 @@ public class World {
     private List<GeometricObject> objects;
     private List<Light> lights;
     private RGBColor backgroundColor;
+    private RGBColor[][] imageColors;
     private Tracer tracer;
 
     public World() {
         objects = new ArrayList<>();
         lights = new ArrayList<>();
         backgroundColor = new RGBColor(0, 0, 0);
-        tracer = new WhittedTracer(this, 5);
+        tracer = new WhittedTracer(this, 20);
     }
 
     public List<GeometricObject> getObjects() {
@@ -82,10 +83,13 @@ public class World {
         int width = 1000;
         int height = 1000;
 
-        PrintWriter writer = new PrintWriter("image.ppm", "UTF-8");
-        writer.printf("P3\n");
-        writer.printf("%d %d\n", width, height);
-        writer.printf("255\n");
+        double maxRed = 0;
+        double maxGreen = 0;
+        double maxBlue = 0;
+
+        double s = 0.25;
+
+        imageColors = new RGBColor[width][height];
 
         double lastPercent = 0;
         for (int row = 0; row < height; row++) {
@@ -96,13 +100,31 @@ public class World {
                     lastPercent = percentDone + 0.001;
                 }
 
-                double x = (col - 0.5 * (width - 1.0));
-                double y = (row - 0.5 * (height - 1.0));
+                double x = s * (col - 0.5 * (width - 1.0));
+                double y = s * (row - 0.5 * (height - 1.0));
 
                 Ray r = new Ray(new Vector(x, y, -z).hat(), new Point(0, 0, z));
-                RGBColor color = tracer.traceRay(r, 0);
+                imageColors[col][row] = tracer.traceRay(r, 0);
 
-                writer.printf("%d %d %d ", (int) color.r, (int) color.g, (int) color.b);
+                maxRed = Math.max(maxRed, imageColors[col][row].r);
+                maxGreen = Math.max(maxGreen, imageColors[col][row].g);
+                maxBlue = Math.max(maxBlue, imageColors[col][row].b);
+            }
+        }
+
+        PrintWriter writer = new PrintWriter("image.ppm", "UTF-8");
+        writer.printf("P3\n");
+        writer.printf("%d %d\n", width, height);
+        writer.printf("255\n");
+
+        double redScale = 256 / maxRed;
+        double greenScale = 256 / maxGreen;
+        double blueScale = 256 / maxBlue;
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                RGBColor color = imageColors[col][row];
+                writer.printf("%d %d %d ", (int) (color.r * redScale), (int) (color.g * greenScale), (int) (color.b * blueScale));
             }
             writer.printf("\n");
         }
