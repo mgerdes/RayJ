@@ -9,6 +9,7 @@ import me.mgerdes.raytracer.Maths.Ray;
 import me.mgerdes.raytracer.Cameras.Camera;
 import me.mgerdes.raytracer.Materials.Lambertian;
 import me.mgerdes.raytracer.Materials.Metal;
+import me.mgerdes.raytracer.Materials.Dielectric;
 
 import java.util.ArrayList;
 
@@ -46,14 +47,16 @@ public class RayTracer {
     }
 
     public static void buildScene() {
-        scene.addHitable(new Sphere(new Vector3(0.0, 0.0, -1.0), 0.5, new Metal(new Vector3(0.5, 0.5, 0.5))));
-        scene.addHitable(new Sphere(new Vector3(0.0, -100.5, -1.0), 100, new Lambertian(new Vector3(0.5, 0.5, 0.5))));
+        scene.addHitable(new Sphere(new Vector3(0.0, 0.0, -1.0), 0.5, new Lambertian(new Vector3(0.1, 0.2, 0.5))));
+        scene.addHitable(new Sphere(new Vector3(0.0, -100.5, -1.0), 100, new Lambertian(new Vector3(0.8, 0.8, 0.0))));
+        scene.addHitable(new Sphere(new Vector3(1.0, 0.0, -1.0), 0.5, new Metal(new Vector3(0.8, 0.6, 0.2), 0.0)));
+        scene.addHitable(new Sphere(new Vector3(-1.0, 0.0, -1.0), 0.5, new Dielectric(1.5)));
     }
 
     public static void main(String[] args) {
         buildScene();
-        int width = 2000;
-        int height = 1000;
+        int width = 200;
+        int height = 100;
         int numSamples = 100;
 
         System.out.printf("P3\n%d %d\n255\n", width, height); 
